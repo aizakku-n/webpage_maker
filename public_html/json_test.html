@@ -1,17 +1,23 @@
-<!doctype html>
-<html ng-app="phonecatApp">
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
-    <script src="./hoge.js"></script>
-  </head>
-<body ng-controller="PhoneListCtrl">
-  <input type="text" ng-model="query.snippet" placeholder="検索">
-  <ul class="phones">
-    <li ng-repeat="phone in phones | filter:query">
-      {{phone.title}}
-      <p>{{phone.torrent}}</p>
-    </li>
-  </ul>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(function() {
+  $.getJSON("data.json" , function(data) {
+    var
+      ulObj = $("#demo"),
+      len = data.length;
+
+    for(var i = 0; i < len; i++) {
+      ulObj.append(data[i].id + data[i].title);
+    }
+  });
+});
+</script>
+</head>
+<body>
+<div id="demo"></div>
 </body>
 </html>
