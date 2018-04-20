@@ -40,15 +40,10 @@ if __name__ == '__main__':
         RL.append(dict(zip(keys, values)))
 
     temp = '"idx":{},"title":"{}","category":"{}","detail":"{}","size":"{}","date":"{}","torrent":"{}","magnet":"{}","image":"{}"'
-    idx = 0
     pl = []
-    for d in RL + dl:
-        if ' comments' in d.get(title):
-            continue
-        try:
-            pl.append('{'+temp.format(idx,d['title'],d['category'],d['detail'],d['size'],d['date'],d['torrent'],d['magnet'],d['image'])+'}')
-            idx += 1
-        except:
-            sys.stderr.write('Rise key error @ make json\n')
-
+    for n, d in enumerate(RL + dl):
+        pl.append('{'+temp.format(n,d.get('title','None'),d.get('category','None'),
+                d.get('detail','None'),d.get('size','None'),d.get('date','None'),
+                d.get('torrent','None'),d.get('magnet','None'),d.get('image','None'))
+                +'}')
     print('[\n' + ',\n'.join(pl) + '\n]')

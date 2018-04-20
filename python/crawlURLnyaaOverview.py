@@ -5,10 +5,11 @@ import re
 from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
-# from progressbar import ProgressBar
 import sys
 import argparse
 import json
+from progressbar import ProgressBar
+
 
 
 parser = argparse.ArgumentParser()
@@ -21,8 +22,9 @@ parser.add_argument('-', '--', dest='', default='',
 args = parser.parse_args()
 
 
-START, END = 1, 5
-# P = ProgressBar(START, END)
+START, END = 1, 10
+P = ProgressBar(START, END+1)
+
 
 def scrapingJS(url):
     # Selenium settings
@@ -40,10 +42,14 @@ def scrapingJS(url):
 
 if __name__ == '__main__':
     URL = "https://sukebei.nyaa.si/?c=1_0&p={}"
-    other_lang = lambda x: ('nglish' in x) or ('韓国語' in x) or ('中国語' in x)
+    other_lang = lambda x: ('nglish' in x) or ('韓国語' in x) or ('翻訳' in x) or ('中国語' in x)
+    comment = lambda x: ' comments' in x
 
-    for i in range(START, END):
-        # P.update(i)
+    for i in range(START, END+1):
+        P.update(i)
+
+        # print('{}...'.format(i), end='', file=sys.stderr)
+
         url = URL.format(i)
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'lxml')
@@ -51,24 +57,24 @@ if __name__ == '__main__':
         D = dict()
         tb_obj = soup.find('tbody')
         for tr in tb_obj.find_all('tr', class_="success"):
-            try:
-                a_lst = tr.find_all('a')
-                category = a_lst[0].get('title').split(' ')[-1]
-                title = a_lst[1].get('title')
-                detail = 'https://sukebei.nyaa.si' + a_lst[1].get('href')
-                torrent = 'https://sukebei.nyaa.si' + a_lst[2].get('href')
-                magnet = a_lst[3].get('href')
+            a_lst = tr.find_all('a')
+            category = a_lst[0].get('title').split(' ')[-1]
+            title = a_lst[1].get('title')
+            detail = 'https://sukebei.nyaa.si' + a_lst[1].get('href')
+            torrent = 'https://sukebei.nyaa.si' + a_lst[2].get('href')
+            magnet = a_lst[3].get('href')
 
-                td_lst = tr.find_all('td')
-                size = tr.find_all('td')[3].string
-                date = tr.find_all('td')[4].string.replace('-','').replace(' ','').replace(':','')
+            td_lst = tr.find_all('td')
+            size = tr.find_all('td')[3].string
+            date = tr.find_all('td')[4].string.replace('-','').replace(' ','').replace(':','')
 
-                if other_lang(title):
-                    continue
+            if other_lang(title) or comment(title):
+                continue
 
-                d_soup = scrapingJS(detail)
-                img = d_soup.find('img').get('src')
+            d_soup = scrapingJS(detail)
+            img = d_soup.find('img').get('src')
 
-                print('\t'.join([title, category, detail, size, date, torrent, magnet, img]))
-            except:
-                sys.stderr.write('Rise something error. Skip this method\n')
+            if all([title, category, detail, size, date, torrent, magnet, img]):
+                print('\t'.join([title, category, detail, size, date, torrent, magnet, img]), flush=True)
+            else:
+                print('Rise something error. Skip this method.', file=sys.stderr)
