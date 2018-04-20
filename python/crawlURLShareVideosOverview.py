@@ -52,12 +52,11 @@ if __name__ == '__main__':
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'lxml')
 
-        print(soup)
-        exit()
-
         # D = dict()
         # tb_obj = soup.find('tbody')
-        # for tr in tb_obj.find_all('tr', class_="success"):
+        for ar in soup.find_all('article'):
+            print(ar)
+            exit()
         #     a_lst = tr.find_all('a')
         #     category = a_lst[0].get('title').split(' ')[-1]
         #     title = a_lst[1].get('title')
@@ -74,7 +73,7 @@ if __name__ == '__main__':
         #
         #     d_soup = scrapingJS(detail)
         #     img = d_soup.find('img').get('src')
-            # 
+            #
             # if all([title, category, detail, size, date, torrent, magnet, img]):
             #     print('\t'.join([title, category, detail, size, date, torrent, magnet, img]), flush=True)
             # else:
