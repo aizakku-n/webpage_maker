@@ -1,6 +1,7 @@
 WD=~/workspace/webpage_maker
 fo=`date "+%Y%m%d-%H%M%S"`.json
 
+curl http://hentaimagnet.x.fc2.com/data.json > $WD/json/data_latest.json
 while true
 do
   python $WD/python/crawlURLnyaaOverview.py | python $WD/python/crawlURLnyaaMakeJSON.py -j $WD/json/data_latest.json > $WD/json/$fo
