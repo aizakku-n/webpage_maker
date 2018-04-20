@@ -21,20 +21,26 @@ if (arg.page !== void 0) {
 $(function() {
   $.getJSON("data.json" , function(data) {
     var
-      obj = $("#demo"),
+      obj = $("#content"),
       links = $("#link"),
       len = data.length;
 
-    for(var i = 0; i < len; i++) {
+    var start = 10 * page;
+    for(var i = start; i < start + 10; i++) {
       obj.append(
         "<h3>" + data[i].title + "</h3>" +
         "<img src=" + data[i].image + "><br>" +
-        "<a href=" + data[i].magnet + "> download </a>" +
-        "" + data[i].id + "<br>" + page
+        "<a href=" + data[i].torrent + "> torrent </a>" +
+        "<a href=" + data[i].magnet + "> magnet </a>" +
+        "" + data[i].size + ' ' + data[i].date + ' ' +
+        "<a href=" + data[i].detail + "> source </a>"+ "<br>"
       );
-      var ip1 = i+1;
+    }
+    for(var i = -5; i < 5; i++) {
+      var np = i + page;
+      if (np > 0 && np < data.length)
       links.append(
-        "<a href=" + location.host + location.pathname + "?page="+ i +">" + ip1 + "</a> "
+        "<a href=" + location.host + location.pathname + "?page="+ np +">" + np + "</a> "
       );
     }
   });
@@ -48,7 +54,8 @@ $(function() {
 </script>
 </head>
 <body>
-<div id="demo"></div>
+<h1>Hentai Magnet</h1>
+<div id="content"></div>
 <div id="link"></div>
 </body>
 </html>
