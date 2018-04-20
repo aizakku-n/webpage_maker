@@ -31,17 +31,17 @@ if __name__ == '__main__':
         for d in dl:
             D.setdefault(d.get('title'), 1)
 
-    RL = []
+    L = []
     keys = ['title','category','detail','size','date','torrent','magnet','image']
     for line in args.input:
         values = line.strip('\n').split('\t')
         if values[0] in D:
             continue
-        RL.append(dict(zip(keys, values)))
+        L.append(dict(zip(keys, values)))
 
     temp = '"idx":{},"title":"{}","category":"{}","detail":"{}","size":"{}","date":"{}","torrent":"{}","magnet":"{}","image":"{}"'
     pl = []
-    for n, d in enumerate(RL + dl):
+    for n, d in enumerate(L + dl):
         pl.append('{'+temp.format(n,d.get('title','None'),d.get('category','None'),
                 d.get('detail','None'),d.get('size','None'),d.get('date','None'),
                 d.get('torrent','None'),d.get('magnet','None'),d.get('image','None'))
