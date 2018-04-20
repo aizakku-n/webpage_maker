@@ -2,16 +2,19 @@
 
 import time
 import re
-# from selenium import webdriver
+from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
-# from progressbar import ProgressBar
 import sys
 import argparse
+import json
+from progressbar import ProgressBar
+
+
 
 parser = argparse.ArgumentParser()
-# parser.add_argument('-i', '--input', dest='input', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
-                    # help='input file')
+parser.add_argument('-i', '--input', dest='input', type=argparse.FileType('r'), default=sys.stdin,
+                    help='input file (json)')
 # parser.add_argument('-o', '--output', dest='output', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
                     # help='output file')
 parser.add_argument('-', '--', dest='', default='',
@@ -19,50 +22,60 @@ parser.add_argument('-', '--', dest='', default='',
 args = parser.parse_args()
 
 
-START, END = 1, 2 # 終了地点は4000 @ 2017/01/25
-# P = ProgressBar(START, END)
+START, END = 1, 10
+# P = ProgressBar(START, END+1)
 
 
-def scraping(url):
-    # Selenium settings
-    # driver = webdriver.PhantomJS()
-    # get a HTML response
-    # driver.get(url)
-    # html = driver.page_source.encode('utf-8')  # more sophisticated methods may be available
-    # parse the response
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, 'lxml')
-
-    return soup
+# def scrapingJS(url):
+#     # Selenium settings
+#     options = webdriver.chrome.options.Options()
+#     options.add_argument("--headless")  # これ消せばブラウザ画面が出ます
+#     driver = webdriver.Chrome(chrome_options=options)
+#     # get a HTML response
+#     driver.get(url)
+#     html = driver.page_source  # more sophisticated methods may be available
+#     # parse the response
+#     soup = BeautifulSoup(html, 'lxml')
+#
+#     return soup
 
 
 if __name__ == '__main__':
     URL = "http://share-videos.se/view/new?uid=13&page={}"
 
-
-    for i in range(START, END):
+    for i in range(START, END+1):
         # P.update(i)
 
+        # print('{}...'.format(i), end='', file=sys.stderr)
+
         url = URL.format(i)
-        soup = scraping(url)
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, 'lxml')
 
         print(soup)
+        exit()
 
-        # flag = False
-        # for tr_obj in soup.find_all('tr'):
-        #     t = tr_obj.text
-        #     if 'No.' in tr_obj.text:
-        #         flag = True
-        #     elif ('次へ' in t and ">>" in t) or ('前へ' in t and '<<' in t):
-        #         final_line = t
-        #     elif flag:
-        #         L = [x.text for x in tr_obj.find_all('td')]
-        #         log_url = tr_obj.find('a')
-        #         idx = L[0]
-        #         L.append("http://ruru-jinro.net/" + log_url['href'])
-        #         print("\t".join(L), file=args.output)
+        # D = dict()
+        # tb_obj = soup.find('tbody')
+        # for tr in tb_obj.find_all('tr', class_="success"):
+        #     a_lst = tr.find_all('a')
+        #     category = a_lst[0].get('title').split(' ')[-1]
+        #     title = a_lst[1].get('title')
+        #     detail = 'https://sukebei.nyaa.si' + a_lst[1].get('href')
+        #     torrent = 'https://sukebei.nyaa.si' + a_lst[2].get('href')
+        #     magnet = a_lst[3].get('href')
         #
-        # if idx == -1 or ("前へ" in final_line and not "次へ" in final_line):
-        #     break
+        #     td_lst = tr.find_all('td')
+        #     size = tr.find_all('td')[3].string
+        #     date = tr.find_all('td')[4].string.replace('-','').replace(' ','').replace(':','')
         #
-        # time.sleep(0.5)
+        #     if other_lang(title) or comment(title):
+        #         continue
+        #
+        #     d_soup = scrapingJS(detail)
+        #     img = d_soup.find('img').get('src')
+            # 
+            # if all([title, category, detail, size, date, torrent, magnet, img]):
+            #     print('\t'.join([title, category, detail, size, date, torrent, magnet, img]), flush=True)
+            # else:
+            #     print('Rise something error. Skip this method.', file=sys.stderr)
