@@ -28,7 +28,8 @@ if __name__ == '__main__':
     if args.json:
         f = open(args.json, 'r')
         dl = json.load(f)
-        D.setdefault(d.get('title'), 1)
+        for d in dl:
+            D.setdefault(d.get('title'), 1)
 
     RL = []
     keys = ['title','category','detail','size','date','torrent','magnet','image']
