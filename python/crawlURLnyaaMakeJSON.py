@@ -28,9 +28,7 @@ if __name__ == '__main__':
     if args.json:
         f = open(args.json, 'r')
         dl = json.load(f)
-        for d in dl:
-            if d.get('title'):
-                D.setdefault(d.get('title'), 1)
+        D.setdefault(d.get('title'), 1)
 
     RL = []
     keys = ['title','category','detail','size','date','torrent','magnet','image']
@@ -44,7 +42,12 @@ if __name__ == '__main__':
     idx = 0
     pl = []
     for d in RL + dl:
-        pl.append('{'+temp.format(idx,d['title'],d['category'],d['detail'],d['size'],d['date'],d['torrent'],d['magnet'],d['image'])+'}')
-        idx += 1
+        if ' comments' in d.get(title):
+            continue
+        try:
+            pl.append('{'+temp.format(idx,d['title'],d['category'],d['detail'],d['size'],d['date'],d['torrent'],d['magnet'],d['image'])+'}')
+            idx += 1
+        except:
+            sys.stderr.write('Rise key error @ make json\n')
 
     print('[\n' + ',\n'.join(pl) + '\n]')
