@@ -8,23 +8,17 @@ from bs4 import BeautifulSoup
 import sys
 import argparse
 import json
-from progressbar import ProgressBar
-
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', dest='input', type=argparse.FileType('r'), default=sys.stdin,
                     help='input file (json)')
-# parser.add_argument('-o', '--output', dest='output', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
-                    # help='output file')
+parser.add_argument('-o', '--output', dest='output', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
+                    help='output file')
 parser.add_argument('-', '--', dest='', default='',
                     help='')
 args = parser.parse_args()
 
-
-START, END = 1, 10
-P = ProgressBar(START, END+1)
-
+START, END = 1, 5
 
 def scrapingJS(url):
     # Selenium settings
@@ -46,15 +40,14 @@ if __name__ == '__main__':
     comment = lambda x: ' comments' in x
 
     for i in range(START, END+1):
-        P.update(i)
-
-        # print('{}...'.format(i), end='', file=sys.stderr)
+        print("start {}'s getting overview loop".format(i), file=sys.stderr, flush=True)
 
         url = URL.format(i)
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'lxml')
 
         D = dict()
+        L = []
         tb_obj = soup.find('tbody')
         for tr in tb_obj.find_all('tr', class_="success"):
             a_lst = tr.find_all('a')
@@ -71,10 +64,19 @@ if __name__ == '__main__':
             if other_lang(title) or comment(title):
                 continue
 
-            d_soup = scrapingJS(detail)
-            img = d_soup.find('img').get('src')
+            if all([title, category, detail, size, date, torrent, magnet]):
+                L.append([title, category, detail, size, date, torrent, magnet])
+                print('.', file=sys.stderr, end='', flush=True)
 
-            if all([title, category, detail, size, date, torrent, magnet, img]):
-                print('\t'.join([title, category, detail, size, date, torrent, magnet, img]), flush=True)
-            else:
-                print('Rise something error. Skip this method.', file=sys.stderr)
+        print('fin!', file=sys.stderr, flush=True)
+
+        print("start {}'s image getter loop".format(i), file=sys.stderr, flush=True, )
+        for l in L:
+            detail = l[2]
+            d_soup = scrapingJS(detail)
+            img = d_soup.find('img')
+            if img:
+                print('\t'.join(l+[img.get('src')]), flush=True)
+            print('.', file=sys.stderr, end='', flush=True)
+
+        print('fin!', file=sys.stderr, flush=True)
