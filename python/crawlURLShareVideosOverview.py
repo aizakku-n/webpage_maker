@@ -56,6 +56,21 @@ if __name__ == '__main__':
         # tb_obj = soup.find('tbody')
         for ar in soup.find_all('article'):
             print(ar)
+
+            a = ar.find('a')
+            detail = None
+            if a:
+                detail = a.get('href')
+
+            print(detail)
+
+            img = ar.find('img')
+            thum = None
+            if img:
+                thum = img.get('src')
+
+            print(thum)
+
             exit()
         #     a_lst = tr.find_all('a')
         #     category = a_lst[0].get('title').split(' ')[-1]
