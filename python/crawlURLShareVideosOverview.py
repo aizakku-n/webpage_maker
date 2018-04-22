@@ -2,13 +2,13 @@
 
 import time
 import re
-from selenium import webdriver
+# from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
 import sys
 import argparse
 import json
-from progressbar import ProgressBar
+# from progressbar import ProgressBar
 
 
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
             a = ar.find('a')
             detail = None
             if a:
-                detail = a.get('href')
+                detail = 'http://share-videos.se' + a.get('href')
 
             print(detail)
 
@@ -70,6 +70,21 @@ if __name__ == '__main__':
                 thum = img.get('src')
 
             print(thum)
+
+            if detail:
+                s = requests.get('http://share-videos.se/auto/video/87174579?uid=13')
+                d_soup =BeautifulSoup(s.text, 'lxml')
+                # print(d_soup)
+                scripts = d_soup.find_all('script', type='text/javascript')
+
+                tag_script_lines = scripts[-1].text.split('\n')
+
+                for line in tag_script_lines:
+                    if 'ul#video_tag' in line:
+                        print(line)
+
+                # print(tag_script_lines)
+
 
             exit()
         #     a_lst = tr.find_all('a')
