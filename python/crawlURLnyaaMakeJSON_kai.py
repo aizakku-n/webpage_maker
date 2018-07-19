@@ -34,13 +34,7 @@ if __name__ == '__main__':
     temp = '"itemSource": "<img src=\'{}\' alt='' />【 {} 】<br> added {} <br> {} <br> <a href=\'{}\'>source</a> <br> <a href=\'{}\'>torrent</a> <a href=\'{}\'>magnet</a>"'
     pl = []
     for n, d in enumerate(L):
-        try:
-            print(d['image'])
-        except:
-            print(d)
-            exit()
         pl.append("{" + '"itemNum": "{}",'.format(n+1)
-         # + temp.format(d['image'], d['title']) + "}")
          + temp.format(d['image'], d['title'], d['date'], d['category'], d['detail'], d['torrent'], d['magnet']) + "}")
 
     print('[\n' + ',\n'.join(pl) + '\n]')
