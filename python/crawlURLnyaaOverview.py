@@ -10,11 +10,11 @@ import argparse
 import json
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--input', dest='input', type=argparse.FileType('r'), default=sys.stdin,
-                    help='input file (json)')
+# parser.add_argument('-i', '--input', dest='input', type=argparse.FileType('r'), default=sys.stdin,
+                    # help='input file')
 parser.add_argument('-o', '--output', dest='output', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
                     help='output file')
-parser.add_argument('-', '--', dest='', default='',
+parser.add_argument('-a', '--aleardy', dest='aleardy', default='',
                     help='')
 args = parser.parse_args()
 
@@ -35,9 +35,24 @@ def scrapingJS(url):
 
 
 if __name__ == '__main__':
+    PL = []
+    C = {}
+    if args.aleardy:
+        with open(args.aleardy, 'r') as f:
+            print('Load privious items', file=sys.stderr, flush=True)
+            for line in f:
+                PL.append(line)
+                l_lst = line.split('\t')
+                C.setdefault(l_lst[0], l_lst[1:])
+            print('Privious item size is {}'.format(len(C)), file=sys.stderr, flush=True)
+
+    print(''.join(PL))
+    exit()
+
     URL = "https://sukebei.nyaa.si/?c=1_0&p={}"
     other_lang = lambda x: ('nglish' in x) or ('韓国語' in x) or ('翻訳' in x) or ('中国語' in x)
     comment = lambda x: ' comments' in x
+    inaleardy = lambda x: x in C
 
     for i in range(START, END+1):
         print("start {}'s getting overview loop".format(i), file=sys.stderr, flush=True)
@@ -61,7 +76,7 @@ if __name__ == '__main__':
             size = tr.find_all('td')[3].string
             date = tr.find_all('td')[4].string.replace('-','').replace(' ','').replace(':','')
 
-            if other_lang(title) or comment(title):
+            if other_lang(title) or comment(title) or inaleardy(title):
                 continue
 
             if all([title, category, detail, size, date, torrent, magnet]):
@@ -78,5 +93,6 @@ if __name__ == '__main__':
             if img:
                 print('\t'.join(l+[img.get('src')]), flush=True)
             print('.', file=sys.stderr, end='', flush=True)
-
         print('fin!', file=sys.stderr, flush=True)
+
+    print(''.join(PL))
