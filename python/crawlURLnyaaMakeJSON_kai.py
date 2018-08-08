@@ -31,10 +31,14 @@ if __name__ == '__main__':
         values = line.strip().split('\t')
         L.append(dict(zip(keys, values)))
 
-    temp = '"itemSource": "<img src=\'{}\' alt='' />【 {} 】<br> added {} <br> {} <br> <a href=\'{}\'>source</a> <br> <a href=\'{}\'>torrent</a> <a href=\'{}\'>magnet</a>"'
+    temp = '"itemSource": "<img src=\'{}\' alt='' />【 {} 】<br> added {} <br> {} \
+            <br> <a href=\'{}\' onclick=\\"window.open(\'http://hentaimagnet.x.fc2.com/ch.html\')\\">source</a> <br> \
+            <a href=\'{}\' onclick=\\"window.open(\'http://hentaimagnet.x.fc2.com/ch.html\')\\" download=\\"{}\\">downlad</a>"'
+    # temp = '"itemSource": "<img src=\'{}\' alt='' />【 {} 】"'
     pl = []
     for n, d in enumerate(L):
         pl.append("{" + '"itemNum": "{}",'.format(n+1)
-         + temp.format(d['image'], d['title'], d['date'], d['category'], d['detail'], d['torrent'], d['magnet']) + "}")
+         # + temp.format(d['image'], d['title']) + "}")
+         + temp.format(d['image'], d['title'], d['date'], d['category'], d['detail'], d['torrent'], d['title']) + "}")
 
     print('[\n' + ',\n'.join(pl) + '\n]')
