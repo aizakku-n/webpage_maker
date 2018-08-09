@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     URL = "https://sukebei.nyaa.si/?c=1_0&p={}"
     other_lang = lambda x: ('nglish' in x) or ('韓国語' in x) or ('翻訳' in x) or ('中国語' in x)
-    comment = lambda x: ' comments' in x
+    comment = lambda x: ' comment' in x
     inaleardy = lambda x: x in C
 
     for i in range(START, END+1):
@@ -78,7 +78,7 @@ if __name__ == '__main__':
                 continue
 
             if all([title, category, detail, size, date, torrent, magnet]):
-                L.append([title, category, detail, size, date, torrent, magnet])
+                L.append([title.replace('"','\"').replace("'","\'"), category, detail, size, date, torrent, magnet])
                 print('.', file=sys.stderr, end='', flush=True)
 
         print('fin!', file=sys.stderr, flush=True)
